@@ -4,7 +4,7 @@ on:
       steamworks_sdk_tag:
         required: true
         type: string
-    secrets:  
+    secrets:
       steamworks_sdk_repo:
         required: true
       steamworks_sdk_repo_token:
@@ -89,14 +89,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      
+
       - name: Checkout Steamworks SDK
         uses: actions/checkout@v4
         with:
           lfs: true
           path: "steamworks"
           repository: ${{ secrets.steamworks_sdk_repo }}
-          token: ${{ secrets.steamworks_sdk_repo_token }}
           ref: ${{ inputs.steamworks_sdk_tag }}
 
       - name: Copy Steamworks
@@ -111,7 +110,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt install gcc-multilib g++-multilib
-      
+
       - name: (Linux) Install buildroot x86_64
         if: ${{ startsWith(matrix.opts.identifier, 'linux-') && contains(matrix.opts.arch, 'x86_64')}}
         shell: sh
@@ -125,7 +124,7 @@ jobs:
           mv x86_64-godot-linux-gnu_sdk-buildroot buildroot
           cd buildroot
           ./relocate-sdk.sh
-      
+
       - name: (Linux) Install buildroot x86_32
         if: ${{ startsWith(matrix.opts.identifier, 'linux-') && contains(matrix.opts.arch, 'x86_32')}}
         shell: sh
@@ -185,7 +184,7 @@ jobs:
 
           cd project/addons/godotsteam
           mkdir win32
-          
+
           touch linux64/.gdignore
           touch linux32/.gdignore
           touch osx/.gdignore

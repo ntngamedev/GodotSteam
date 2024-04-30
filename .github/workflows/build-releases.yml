@@ -1,5 +1,8 @@
 name: Build Releases
 on:
+  push:
+    branches:
+      - "gdextension"
   workflow_dispatch:
     inputs:
       steamworks_sdk_tag:
