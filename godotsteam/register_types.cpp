@@ -8,21 +8,29 @@
 #include <godot_cpp/godot.hpp>
 
 #include "godotsteam.h"
+#include "steam_connection.h"
+#include "steam_multiplayer_peer.h"
+#include "steam_packet_peer.h"
 
 using namespace godot;
 
 static Steam *SteamPtr;
 
-void initialize_godotsteam(ModuleInitializationLevel level){
-	if(level == MODULE_INITIALIZATION_LEVEL_SCENE){
+void initialize_godotsteam(ModuleInitializationLevel level) {
+	if (level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+		ClassDB::register_class<SteamPacketPeer>();
+		ClassDB::register_class<SteamConnection>();
+		ClassDB::register_class<SteamMultiplayerPeer>();
 		ClassDB::register_class<Steam>();
+
 		SteamPtr = memnew(Steam);
+
 		Engine::get_singleton()->register_singleton("Steam", Steam::get_singleton());
 	}
 }
 
-void uninitialize_godotsteam(ModuleInitializationLevel level){
-	if(level == MODULE_INITIALIZATION_LEVEL_SCENE){
+void uninitialize_godotsteam(ModuleInitializationLevel level) {
+	if (level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		Engine::get_singleton()->unregister_singleton("Steam");
 		memdelete(SteamPtr);
 	}
