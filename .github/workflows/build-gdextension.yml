@@ -95,7 +95,7 @@ jobs:
         with:
           lfs: true
           path: "steamworks"
-          repository: ${{ secrets.steamworks_sdk_repo }}
+          repository: "https://github.com/expressobits"
           ref: ${{ inputs.steamworks_sdk_tag }}
 
       - name: Copy Steamworks
