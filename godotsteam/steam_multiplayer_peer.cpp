@@ -1,7 +1,6 @@
 #include <godot_cpp/core/class_db.hpp>
 
 #include "steam_multiplayer_peer.h"
-#include "godotsteam.h"
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -215,12 +214,30 @@ bool SteamMultiplayerPeer::close_listen_socket() {
 	return true;
 }
 
+// Error SteamMultiplayerPeer::create_host(int n_local_virtual_port, Array options) {
+// 	ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
+// 	listen_socket = Steam::get_singleton()->createListenSocketP2P(n_local_virtual_port, options);
+
+// 	printf("[SteamMultiplayerPeer] Listen socket created %d controllers.", listen_socket);
+
+// 	if (listen_socket == k_HSteamListenSocket_Invalid) {
+// 		return Error::ERR_CANT_CREATE;
+// 	}
+// 	unique_id = 1;
+// 	active_mode = MODE_SERVER;
+// 	connection_status = ConnectionStatus::CONNECTION_CONNECTED;
+// 	return Error::OK;
+// }
+
 Error SteamMultiplayerPeer::create_host(int n_local_virtual_port, Array options) {
 	ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
-	listen_socket = Steam::get_singleton()->createListenSocketP2P(n_local_virtual_port, options);
-
-	printf("[SteamMultiplayerPeer] Listen socket created %d.", listen_socket);
-
+	if (SteamNetworkingSockets() == NULL) {
+		return Error::ERR_CANT_CREATE;
+	}
+	SteamNetworkingUtils()->InitRelayNetworkAccess();
+	const SteamNetworkingConfigValue_t *these_options = convert_options_array(options);
+	listen_socket = SteamNetworkingSockets()->CreateListenSocketP2P(n_local_virtual_port, options.size(), these_options);
+	delete[] these_options;
 	if (listen_socket == k_HSteamListenSocket_Invalid) {
 		return Error::ERR_CANT_CREATE;
 	}
